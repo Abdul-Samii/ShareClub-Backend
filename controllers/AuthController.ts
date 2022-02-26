@@ -26,6 +26,7 @@ export const RegisterNeedy  =async(req:Request,res:Response,next:NextFunction)=>
             name:name,
             email:email,
             password:hashPassword,
+            salt:salt,
             pic:pic,
             phone:phone,
             city:city,
@@ -45,7 +46,6 @@ export const RegisterNeedy  =async(req:Request,res:Response,next:NextFunction)=>
 
 
 //Donor Registration
-//Needy Registration
 export const RegisterDonor  =async(req:Request,res:Response,next:NextFunction)=>{
     const {name,email,password,pic,phone,city,country,address,ads,
         activeAds,role,isApprove} = <DonorDto>req.body;
@@ -63,10 +63,11 @@ export const RegisterDonor  =async(req:Request,res:Response,next:NextFunction)=>
         //encrpt password using salt
         const hashPassword = await GeneratePassword(password,salt);
 
-        const createNeedy = await NeedyRequest.create({
+        const createNeedy = await DonorRequest.create({
             name:name,
             email:email,
             password:hashPassword,
+            salt:salt,
             pic:pic,
             phone:phone,
             city:city,

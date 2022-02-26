@@ -4,6 +4,7 @@ interface AdminDoc extends Document{
     name:string;
     email:string;
     password:string;
+    salt:any;
     pic:string;
     phone:string;
     city:string;

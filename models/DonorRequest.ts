@@ -4,6 +4,7 @@ interface DonorDoc extends Document{
     name:string;
     email:string;
     password:string;
+    salt:string;
     pic:string;
     phone:string;
     city:string;
@@ -26,6 +27,10 @@ const DonorRequestSchema =  new Schema({
         required:true
     },
     password:{
+        type:String,
+        required:true
+    },
+    salt:{
         type:String,
         required:true
     },

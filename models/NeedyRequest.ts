@@ -4,6 +4,7 @@ interface NeedyDoc extends Document{
     name:string;
     email:string;
     passowrd:string;
+    salt:string;
     pic:string;
     phone:string;
     city:string;
@@ -26,6 +27,10 @@ const NeedyRequestSchema =  new Schema({
         required:true
     },
     password:{
+        type:String,
+        required:true
+    },
+    salt:{
         type:String,
         required:true
     },
