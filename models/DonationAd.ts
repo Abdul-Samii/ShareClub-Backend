@@ -45,11 +45,11 @@ const DonationAdSchema =  new Schema({
     },
     owner:{
         type:mongoose.SchemaTypes.ObjectId,
-        ref:'donor'
+        ref:'donor',
     },
     needy:{
         type:mongoose.SchemaTypes.ObjectId,
-        ref:'donor'
+        ref:'needy',
     },
     isAvailible:{
         type:Boolean,
