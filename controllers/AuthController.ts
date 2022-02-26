@@ -1,7 +1,7 @@
 import { Request,Response,NextFunction } from "express";
-import { DonorDto, NeedyDto } from "../dto";
+import { AuthPayload, DonorDto, LoginInput, NeedyDto } from "../dto";
 import { Donor, DonorRequest, Needy, NeedyRequest } from "../models";
-import { GeneratePassword,GenerateSalt } from "../utility";
+import { GeneratePassword,GenerateSalt, GenerateSignature, ValidatePassword } from "../utility";
 
 
 //Needy Registration
@@ -82,4 +82,43 @@ export const RegisterDonor  =async(req:Request,res:Response,next:NextFunction)=>
         return res.status(200).json(createNeedy);
     }
 
+}
+
+
+
+//Login 
+export const Login = async(req:Request,res:Response,next:NextFunction) =>{
+    const {email,password,type} = <LoginInput>req.body;
+    var existingUser;
+    if(type == "needy")
+    {
+         existingUser = await Needy.find({email:email});
+    }
+    else if(type == "donor")
+    {
+         existingUser = await Donor.find({email:email});
+    }
+    const temp = JSON.stringify(existingUser)
+    const loginUser = JSON.parse(temp)
+    console.log(loginUser[0])
+    if(loginUser[0] !=null)
+    {
+        const validation = await ValidatePassword(password,loginUser[0].password,loginUser[0].salt);
+        if(validation)
+        {
+            const token = GenerateSignature({
+                _id:loginUser[0]._id,
+                email:loginUser[0].email,
+                name:loginUser[0].name,
+                role:loginUser[0].role
+            })
+            return res.status(200).json({"token ":token});
+        }
+        else{
+            return res.status(400).json({"message":"Invalid Password"})
+        }
+    }
+    else{
+        return res.status(404).json({"message":"User not found"});
+    }
 }
