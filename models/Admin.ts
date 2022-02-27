@@ -27,6 +27,10 @@ const AdminSchema =  new Schema({
         type:String,
         required:true
     },
+    salt:{
+        type:String,
+        required:true
+    },
     pic:{
         type:String,
         default:"https://www.w3schools.com/howto/img_avatar.png"

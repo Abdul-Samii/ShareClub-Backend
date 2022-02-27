@@ -4,6 +4,31 @@ import { Donor, DonorRequest, Needy, NeedyRequest } from "../models";
 
 
 
+//View Needy Requests
+export const ViewNeedyRequests = async(req:Request,res:Response,next:NextFunction)=>{
+    try{
+        const NeedyRequests = await NeedyRequest.find();
+        return res.status(200).json(NeedyRequests);
+    }
+    catch(err)
+    {
+        return res.status(200).json("Something went wrong!")
+    }
+}
+
+//View Donor Requests
+export const ViewDonorRequests = async(req:Request,res:Response,next:NextFunction)=>{
+    try{
+        const DonorRequests = await DonorRequest.find();
+        return res.status(200).json(DonorRequests);
+    }
+    catch(err)
+    {
+        return res.status(200).json("Something went wrong!")
+    }
+}
+
+
 //Approve Needy
 export const ApproveNeedy = async(req:Request,res:Response,next:NextFunction)=>{
     const needyId = req.body.needyId;

@@ -1,6 +1,6 @@
 import { Request,Response,NextFunction } from "express";
-import { AuthPayload, DonorDto, LoginInput, NeedyDto } from "../dto";
-import { Donor, DonorRequest, Needy, NeedyRequest } from "../models";
+import { AdminDto, AuthPayload, DonorDto, LoginInput, NeedyDto } from "../dto";
+import { Admin, Donor, DonorRequest, Needy, NeedyRequest } from "../models";
 import { GeneratePassword,GenerateSalt, GenerateSignature, ValidatePassword } from "../utility";
 
 
@@ -11,7 +11,7 @@ export const RegisterNeedy  =async(req:Request,res:Response,next:NextFunction)=>
 
     const alreadyRegister = await Needy.find({email:email});
     const alreadyRequested = await NeedyRequest.find({email:email});
-
+console.log("he is here")
     if(alreadyRegister[0]!=null || alreadyRequested[0]!=null)
     {
         return res.status(400).json("Error! A User already exist with this email")
@@ -38,7 +38,7 @@ export const RegisterNeedy  =async(req:Request,res:Response,next:NextFunction)=>
             isApprove:isApprove
         });
         
-        return res.status(200).json(createNeedy);
+        return res.status(200).json("Your Registration request is sent for approval");
     }
 
 }
@@ -63,7 +63,7 @@ export const RegisterDonor  =async(req:Request,res:Response,next:NextFunction)=>
         //encrpt password using salt
         const hashPassword = await GeneratePassword(password,salt);
 
-        const createNeedy = await DonorRequest.create({
+        const createDonor = await DonorRequest.create({
             name:name,
             email:email,
             password:hashPassword,
@@ -79,7 +79,43 @@ export const RegisterDonor  =async(req:Request,res:Response,next:NextFunction)=>
             isApprove:isApprove
         });
         
-        return res.status(200).json(createNeedy);
+        return res.status(200).json("Your Registration request is sent for approval");
+    }
+
+}
+
+
+
+//Admin Registration 
+export const RegisterAdmin  =async(req:Request,res:Response,next:NextFunction)=>{
+    const {name,email,password,pic,phone,city,country,address,role} = <AdminDto>req.body;
+
+    const alreadyRegister = await Admin.find({email:email});
+
+    if(alreadyRegister[0]!=null)
+    {
+        return res.status(400).json("Error! A User already exist with this email")
+    }
+    else{
+        //generate salt
+        const salt = await GenerateSalt();
+        //encrpt password using salt
+        const hashPassword = await GeneratePassword(password,salt);
+
+        const createAdmin = await Admin.create({
+            name:name,
+            email:email,
+            password:hashPassword,
+            salt:salt,
+            pic:pic,
+            phone:phone,
+            city:city,
+            country:country,
+            address:address,
+            role:role
+            });
+        
+        return res.status(200).json(createAdmin);
     }
 
 }
@@ -98,6 +134,10 @@ export const Login = async(req:Request,res:Response,next:NextFunction) =>{
     {
          existingUser = await Donor.find({email:email});
     }
+    else if(type == "admin")
+    {
+         existingUser = await Admin.find({email:email});
+    }
     const temp = JSON.stringify(existingUser)
     const loginUser = JSON.parse(temp)
     console.log(loginUser[0])
@@ -115,10 +155,10 @@ export const Login = async(req:Request,res:Response,next:NextFunction) =>{
             return res.status(200).json({"token ":token});
         }
         else{
-            return res.status(400).json({"message":"Invalid Password"})
+            return res.status(400).json("Invalid Password")
         }
     }
     else{
-        return res.status(404).json({"message":"User not found"});
+        return res.status(404).json("User not found");
     }
 }
