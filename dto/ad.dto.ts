@@ -8,5 +8,6 @@ export interface adDto{
     address:string;
     phone:string;
     needy:any;
+    category:any;
     isAvailible:boolean;
 }

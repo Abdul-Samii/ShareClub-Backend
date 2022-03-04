@@ -6,6 +6,7 @@ interface adDoc extends Document{
     description:string;
     owner:any;
     needy:any;
+    category:any;
     isAvailible:boolean;
     images:[string];
     city:string;
@@ -51,6 +52,10 @@ const DonationAdSchema =  new Schema({
         type:mongoose.SchemaTypes.ObjectId,
         ref:'needy',
     },
+    category:[{
+        type:mongoose.SchemaTypes.ObjectId,
+        ref:'category'
+    }],
     isAvailible:{
         type:Boolean,
         default:true

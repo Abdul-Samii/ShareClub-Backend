@@ -11,10 +11,9 @@ export const RegisterNeedy  =async(req:Request,res:Response,next:NextFunction)=>
 
     const alreadyRegister = await Needy.find({email:email});
     const alreadyRequested = await NeedyRequest.find({email:email});
-console.log("he is here")
     if(alreadyRegister[0]!=null || alreadyRequested[0]!=null)
     {
-        return res.status(400).json("Error! A User already exist with this email")
+        return res.status(200).json("Error! A User already exist with this email")
     }
     else{
         //generate salt
@@ -55,7 +54,7 @@ export const RegisterDonor  =async(req:Request,res:Response,next:NextFunction)=>
 
     if(alreadyRegister[0]!=null || alreadyRequested[0]!=null)
     {
-        return res.status(400).json("Error! A User already exist with this email")
+        return res.status(200).json("Error! A User already exist with this email")
     }
     else{
         //generate salt
@@ -124,6 +123,7 @@ export const RegisterAdmin  =async(req:Request,res:Response,next:NextFunction)=>
 
 //Login 
 export const Login = async(req:Request,res:Response,next:NextFunction) =>{
+    console.log("yes here")
     const {email,password,type} = <LoginInput>req.body;
     var existingUser;
     if(type == "needy")
@@ -152,13 +152,13 @@ export const Login = async(req:Request,res:Response,next:NextFunction) =>{
                 name:loginUser[0].name,
                 role:loginUser[0].role
             })
-            return res.status(200).json({"token ":token});
+            return res.status(200).json({token :token,msg:"You are Logged in",userId:loginUser[0]._id});
         }
         else{
-            return res.status(400).json("Invalid Password")
+            return res.status(200).json({msg:"Invalid Password"})
         }
     }
     else{
-        return res.status(404).json("User not found");
+        return res.status(200).json({msg:"User not found"});
     }
 }
