@@ -56,11 +56,11 @@ const NeedySchema =  new Schema({
     },
     acceptedAds:[{
         type:mongoose.SchemaTypes.ObjectId,
-        ref:'ad'
+        ref:'donationad'
     }],
     currentAds:[{
         type:mongoose.SchemaTypes.ObjectId,
-        ref:'ad'
+        ref:'donationad'
     }],
     role:{
         type:String,

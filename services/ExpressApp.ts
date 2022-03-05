@@ -1,6 +1,6 @@
 import express, {Application} from 'express';
 import bodyParser from 'body-parser';
-import { AdminRoute, AuthRoute, DonorRoute, NeedyRoute } from '../routes';
+import { AdminRoute, AuthRoute, DonorRoute, NeedyRoute,UpdatesRouter } from '../routes';
 
 
 export default async(app:Application)=>{
@@ -15,6 +15,6 @@ export default async(app:Application)=>{
     app.use('/admin',AdminRoute);
     app.use('/donor',DonorRoute);
     app.use('/needy',NeedyRoute);
-
+    app.use('/update',UpdatesRouter)
     return app;
 }

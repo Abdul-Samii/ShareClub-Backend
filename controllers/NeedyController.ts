@@ -21,7 +21,7 @@ export const GetNeedy = async(req:Request,res:Response,next:NextFunction)=>{
 //Book Donation
 export const BookDonationAd = async(req:Request,res:Response,next:NextFunction)=>{
     const donationAdId = req.body.donationAdId;
-    const needyId = req.body.needyId;
+    const needyId = req.body.userId;
     const availible = await DonationAd.findById({_id:donationAdId})
     try{
         if(availible)
@@ -37,7 +37,12 @@ export const BookDonationAd = async(req:Request,res:Response,next:NextFunction)=
                         needy:needyId,
                         isAvailible:false
                     }
-                })
+                });
+                await Needy.findByIdAndUpdate({_id:needyId},{
+                    $push:{
+                        currentAds:donationAdId
+                    }
+                });
             }
             else{
                 return res.status(400).json("Donation Ad is Booked by other user")
@@ -74,6 +79,29 @@ export const ViewNearbyDonations=async(req:Request,res:Response,next:NextFunctio
             return res.status(200).json({"msg":"No Donation ad availible in your region"})
         }
     return res.status(200).json({donations:donations,msg:"showing nearby ads"})
+    }
+    catch(err)
+    {
+        return res.status(403).json({"msg":"Something went wrong!"});
+    }
+}
+
+
+
+//View Booked donations
+export const ViewBookedDonations=async(req:Request,res:Response,next:NextFunction)=>{
+    const userId = req.query.userId;
+    console.log("Checkeding -> ",userId);
+    try{
+    const needyo = await Needy.findById({_id:userId}).populate('currentAds');
+    const temp = JSON.stringify(needyo);
+    const bookedAds = JSON.parse(temp);
+    if( bookedAds==null)
+    {
+        return res.status(200).json({"msg":"No donation Ad found"})
+    }
+        
+    return res.status(200).json({donations:bookedAds,msg:"showing booked ads"})
     }
     catch(err)
     {
