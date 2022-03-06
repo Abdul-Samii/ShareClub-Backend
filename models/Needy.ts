@@ -13,6 +13,8 @@ interface NeedyDoc extends Document{
     acceptedAds:any;
     currentAds:any;
     role:string;
+    privateMode:boolean;
+    allowMessages:boolean;
     isApprove:boolean;
 }
 
@@ -65,6 +67,14 @@ const NeedySchema =  new Schema({
     role:{
         type:String,
         default:"needy"
+    },
+    privateMode:{
+        type:Boolean,
+        default:true
+    },
+    allowMessages:{
+        type:Boolean,
+        default:true
     },
     isApprove:{
         type:Boolean,

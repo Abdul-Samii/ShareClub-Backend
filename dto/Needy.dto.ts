@@ -10,5 +10,7 @@ export interface NeedyDto{
     acceptedAds:any;
     currentAds:any;
     role:string;
+    privateMode:boolean;
+    allowMessages:boolean;
     isApprove:boolean;
 }

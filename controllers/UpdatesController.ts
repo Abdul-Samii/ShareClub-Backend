@@ -149,3 +149,111 @@ catch(err)
 }
 
 }
+
+
+
+//Change Private Mode
+export const ChangePrivateMode = async(req:Request,res:Response,next:NextFunction) =>{
+    const type = req.body.type;
+    const mode = req.body.mode;
+    const userId = req.body.userId;
+    var user;
+console.log("Checking   ",type, mode, userId)
+    try{
+    if(type === 'needy')
+    {
+         user = await Needy.findById({_id:userId});
+    }
+    else if(type === 'donor')
+    {
+         user = await Donor.findById({_id:userId});
+    }
+    
+
+    const temp = JSON.stringify(user)
+    const userDetail = JSON.parse(temp)
+    if(userDetail!=null)
+    {
+                    
+            if(type === 'needy')
+            {
+                 await Needy.findOneAndUpdate({_id:userId},{
+                     $set:{
+                         privateMode:mode
+                     }
+                 })
+            }
+            else if(type === 'donor')
+            {
+                await Donor.findOneAndUpdate({_id:userId},{
+                    $set:{
+                        privateMode:mode
+                    }
+                })
+            }
+           
+
+            return res.status(200).json({msg:"Mode Updated!"});
+        
+    }
+}
+catch(err)
+{
+    return res.status(403).json({"msg":"Something went wrong!"})
+}
+
+}
+
+
+
+//Change Messages Mode
+export const ChangeMessagesMode = async(req:Request,res:Response,next:NextFunction) =>{
+    const type = req.body.type;
+    const mode = req.body.mode;
+    const userId = req.body.userId;
+    var user;
+
+    try{
+    if(type === 'needy')
+    {
+         user = await Needy.findById({_id:userId});
+    }
+    else if(type === 'donor')
+    {
+         user = await Donor.findById({_id:userId});
+    }
+    
+
+    const temp = JSON.stringify(user)
+    const userDetail = JSON.parse(temp)
+    if(userDetail!=null)
+    {
+                    
+            if(type === 'needy')
+            {
+                 await Needy.findOneAndUpdate({_id:userId},{
+                     $set:{
+                         allowMessages:mode
+                     }
+                 })
+            }
+            else if(type === 'donor')
+            {
+                await Donor.findOneAndUpdate({_id:userId},{
+                    $set:{
+                        allowMessages:mode
+                    }
+                })
+            }
+           
+
+            return res.status(200).json({msg:"Mode Updated!"});
+        
+    }
+}
+catch(err)
+{
+    return res.status(403).json({"msg":"Something went wrong!"})
+}
+
+}
