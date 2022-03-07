@@ -255,5 +255,77 @@ catch(err)
 {
     return res.status(403).json({"msg":"Something went wrong!"})
 }
+}
+
+
+
+//Change Address
+export const ChangeAddress = async(req:Request,res:Response,next:NextFunction) =>{
+    const type = req.body.type;
+    const city = req.body.city;
+    const country = req.body.country;
+    const address = req.body.address;
+    const userId = req.body.userId;
+    var user;
+
+    try{
+    if(type === 'needy')
+    {
+         user = await Needy.findById({_id:userId});
+    }
+    else if(type === 'donor')
+    {
+         user = await Donor.findById({_id:userId});
+    }
+    else if(type === 'admin')
+    {
+         user = await Donor.findById({_id:userId});
+    }
+    
+    const temp = JSON.stringify(user)
+    const userDetail = JSON.parse(temp)
+    if(userDetail!=null)
+    {
+                    
+            if(type === 'needy')
+            {
+                 await Needy.findOneAndUpdate({_id:userId},{
+                     $set:{
+                         city:city,
+                         country:country,
+                         address:address
+                     }
+                 })
+            }
+            else if(type === 'donor')
+            {
+                await Donor.findOneAndUpdate({_id:userId},{
+                    $set:{
+                        city:city,
+                        country:country,
+                        address:address
+                    }
+                })
+            }
+            else if(type === 'admin')
+            {
+                await Admin.findOneAndUpdate({_id:userId},{
+                    $set:{
+                        city:city,
+                        country:country,
+                        address:address
+                    }
+                })
+            }
+           
+
+            return res.status(200).json({msg:"Address Updated!"});
+        
+    }
+}
+catch(err)
+{
+    return res.status(403).json({"msg":"Something went wrong!"})
+}
 
 }
