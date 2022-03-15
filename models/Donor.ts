@@ -10,6 +10,7 @@ interface DonorDoc extends Document{
     city:string;
     country:string;
     address:string;
+    state:string;
     ads:any;
     activeAds:any;
     role:string;
@@ -51,6 +52,10 @@ const DonorSchema =  new Schema({
         default:"-"
     },
     address:{
+        type:String,
+        default:"-"
+    },
+    state:{
         type:String,
         default:"-"
     },

@@ -10,6 +10,7 @@ interface NeedyDoc extends Document{
     city:string;
     country:string;
     address:string;
+    state:string;
     acceptedAds:any;
     currentAds:any;
     role:string;
@@ -47,6 +48,10 @@ const NeedyRequestSchema =  new Schema({
         default:"-"
     },
     country:{
+        type:String,
+        default:"-"
+    },
+    state:{
         type:String,
         default:"-"
     },

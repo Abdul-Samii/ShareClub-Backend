@@ -10,6 +10,7 @@ interface AdminDoc extends Document{
     city:string;
     country:string;
     address:string;
+    state:string;
     role:string;
 }
 
@@ -44,6 +45,10 @@ const AdminSchema =  new Schema({
         default:"-"
     },
     country:{
+        type:String,
+        default:"-"
+    },
+    state:{
         type:String,
         default:"-"
     },

@@ -6,6 +6,7 @@ export interface NeedyDto{
     phone:string;
     city:string;
     country:string;
+    state:string;
     address:string;
     acceptedAds:any;
     currentAds:any;

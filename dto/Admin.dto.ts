@@ -5,6 +5,7 @@ export interface AdminDto{
     city:string;
     country:string;
     address:string;
+    state:string;
     role:string;
     pic:string;
     password:string;

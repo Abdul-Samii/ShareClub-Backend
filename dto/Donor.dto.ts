@@ -6,6 +6,7 @@ export interface DonorDto{
     phone:string;
     city:string;
     country:string;
+    state:string;
     address:string;
     ads:any;
     activeAds:any

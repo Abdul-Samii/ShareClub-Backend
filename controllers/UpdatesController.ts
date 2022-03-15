@@ -265,7 +265,9 @@ export const ChangeAddress = async(req:Request,res:Response,next:NextFunction) =
     const city = req.body.city;
     const country = req.body.country;
     const address = req.body.address;
+    const state = req.body.state;
     const userId = req.body.userId;
+    
     var user;
 
     try{
@@ -293,7 +295,8 @@ export const ChangeAddress = async(req:Request,res:Response,next:NextFunction) =
                      $set:{
                          city:city,
                          country:country,
-                         address:address
+                         address:address,
+                         state:state
                      }
                  })
             }
@@ -303,7 +306,8 @@ export const ChangeAddress = async(req:Request,res:Response,next:NextFunction) =
                     $set:{
                         city:city,
                         country:country,
-                        address:address
+                        address:address,
+                        state:state
                     }
                 })
             }
@@ -313,7 +317,8 @@ export const ChangeAddress = async(req:Request,res:Response,next:NextFunction) =
                     $set:{
                         city:city,
                         country:country,
-                        address:address
+                        address:address,
+                        state:state
                     }
                 })
             }
