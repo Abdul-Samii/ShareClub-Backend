@@ -10,6 +10,7 @@ export interface NeedyDto{
     address:string;
     acceptedAds:any;
     currentAds:any;
+    rejectedAds:any;
     role:string;
     privateMode:boolean;
     allowMessages:boolean;

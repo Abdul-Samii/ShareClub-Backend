@@ -76,7 +76,7 @@ export const ViewNearbyDonations=async(req:Request,res:Response,next:NextFunctio
     const donations = await DonationAd.find({city:needyCity}) 
         if(donations[0] == null)
         {
-            return res.status(200).json({"msg":"No Donation ad availible in your region"})
+            return res.status(200).json({"msg":"No Donation ad available in your region"})
         }
     return res.status(200).json({donations:donations,msg:"showing nearby ads"})
     }
@@ -93,7 +93,12 @@ export const ViewBookedDonations=async(req:Request,res:Response,next:NextFunctio
     const userId = req.query.userId;
     console.log("Checkeding -> ",userId);
     try{
-    const needyo = await Needy.findById({_id:userId}).populate('currentAds');
+    const needyo = await Needy.findById({_id:userId}).populate({
+        path:'currentAds',
+        populate:{
+            path:'category'
+        }
+    })
     const temp = JSON.stringify(needyo);
     const bookedAds = JSON.parse(temp);
     if( bookedAds==null)

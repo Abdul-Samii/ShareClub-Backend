@@ -1,6 +1,6 @@
-import { Request,Response,NextFunction } from "express";
-import { DonorDto, NeedyDto } from "../dto";
-import { Donor, DonorRequest, Needy, NeedyRequest } from "../models";
+import { Request,Response,NextFunction, response } from "express";
+import { categoryDto, DonorDto, NeedyDto } from "../dto";
+import { Category, Donor, DonorRequest, Needy, NeedyRequest } from "../models";
 
 
 
@@ -140,3 +140,21 @@ export const RejectNeedy = async(req:Request,res:Response,next:NextFunction)=>{
     return res.status(200).json("Needy Rejected!");
 
 } 
+
+
+//Add New Category
+export const AddCategory = async(req:Request,res:Response,next:NextFunction)=>{
+    const {name} = <categoryDto>req.body;
+    try{
+       const newCategory =  await Category.create({
+            name:name
+        })
+
+        res.status(200).json(newCategory)
+    }
+    catch(err)
+    {
+        res.status(403).json({"msg":"Something went wrong!"})
+    }
+
+}

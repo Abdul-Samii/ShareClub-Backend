@@ -52,10 +52,10 @@ const DonationAdSchema =  new Schema({
         type:mongoose.SchemaTypes.ObjectId,
         ref:'needy',
     },
-    category:[{
+    category:{
         type:mongoose.SchemaTypes.ObjectId,
         ref:'category'
-    }],
+    },
     isAvailible:{
         type:Boolean,
         default:true
