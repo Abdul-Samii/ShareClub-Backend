@@ -11,5 +11,7 @@ export interface DonorDto{
     ads:any;
     activeAds:any
     role:string;
+    privateMode:boolean;
+    allowMessages:boolean;
     isApprove:boolean;
 }

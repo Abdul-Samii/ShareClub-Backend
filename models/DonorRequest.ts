@@ -14,6 +14,8 @@ interface DonorDoc extends Document{
     ads:any;
     activeAds:any;
     role:string;
+    privateMode:boolean;
+    allowMessages:boolean;
     isApprove:boolean;
 }
 
@@ -70,6 +72,14 @@ const DonorRequestSchema =  new Schema({
     role:{
         type:String,
         default:"donor"
+    },
+    privateMode:{
+        type:Boolean,
+        default:true
+    },
+    allowMessages:{
+        type:Boolean,
+        default:true
     },
     isApprove:{
         type:Boolean,
