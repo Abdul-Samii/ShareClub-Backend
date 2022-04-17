@@ -1,6 +1,6 @@
 import { Request,Response,NextFunction, response } from "express";
 import { categoryDto, DonorDto, NeedyDto } from "../dto";
-import { Category, Donor, DonorRequest, Needy, NeedyRequest } from "../models";
+import { Category, Donor, DonorFB, DonorRequest, Needy, NeedyRequest } from "../models";
 
 
 
@@ -86,22 +86,44 @@ export const ApproveDonor = async(req:Request,res:Response,next:NextFunction)=>{
         const temp = JSON.stringify(donorData)
         const data = JSON.parse(temp)
         const {name,email,password,pic,salt,phone,city,country,address,ads,
-            activeAds,role,isApprove} = data;
-        const  newDonor = await Donor.create({
-            name:name,
-            email:email,
-            password:password,
-            salt:salt,
-            pic:pic,
-            phone:phone,
-            city:city,
-            country:country,
-            address:address,
-            ads:ads,
-            activeAds:activeAds,
-            role:role,
-            isApprove:isApprove
-        });
+            activeAds,role,isApprove,fbID,signupType} = data;
+        if(signupType == 1)
+            {   
+             const  newDonor = await Donor.create({
+                name:name,
+                email:email,
+                password:password,
+                salt:salt,
+                signupType:signupType,
+                pic:pic,
+                phone:phone,
+                city:city,
+                country:country,
+                address:address,
+                ads:ads,
+                activeAds:activeAds,
+                role:role,
+                isApprove:isApprove
+            });
+        }
+        else if(signupType == 2)
+            {   
+             const  newDonor = await DonorFB.create({
+                name:name,
+                email:email,
+                fbID:fbID,
+                signupType:signupType,
+                pic:pic,
+                phone:phone,
+                city:city,
+                country:country,
+                address:address,
+                ads:ads,
+                activeAds:activeAds,
+                role:role,
+                isApprove:isApprove
+            });
+        }
         await DonorRequest.findByIdAndDelete({_id:donorId})
 
     }
@@ -156,5 +178,26 @@ export const AddCategory = async(req:Request,res:Response,next:NextFunction)=>{
     {
         res.status(403).json({"msg":"Something went wrong!"})
     }
-
 }
+
+//Get All Categories
+export const GetCategory = async(req:Request,res:Response,next:NextFunction)=>{
+    console.log("Cat")
+    try{
+       const Categories =  await Category.find()
+
+        res.status(200).json({"categories":Categories,"msg":"Successfully get all categories"})
+    }
+    catch(err)
+    {
+        res.status(403).json({"msg":"Something went wrong!"})
+    }
+}
+
+
+//Reject Donor
+export const YO = async(req:Request,res:Response,next:NextFunction)=>{
+    
+    return res.status(200).json("Working");
+
+} 

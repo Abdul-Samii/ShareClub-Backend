@@ -3,8 +3,7 @@ import mongoose,{Schema,Document,Model} from "mongoose";
 interface DonorDoc extends Document{
     name:string;
     email:string;
-    password:string;
-    salt:string;
+    fbID:string;
     pic:string;
     phone:string;
     city:string;
@@ -30,14 +29,10 @@ const DonorSchema =  new Schema({
         type:String,
         required:true
     },
-    password:{
-        type:String,
-        required:true
-    },
-    salt:{
-        type:String,
-        required:true
-    },
+   fbID:{
+       type:String,
+       required:true
+   },
     pic:{
         type:String,
         default:"https://www.w3schools.com/howto/img_avatar.png"
@@ -64,7 +59,7 @@ const DonorSchema =  new Schema({
     },
     signupType:{
         type:Number,
-        default:1
+        default:2,
     },
     ads:[{
         type:mongoose.SchemaTypes.ObjectId,
@@ -96,6 +91,6 @@ const DonorSchema =  new Schema({
     }
 );
 
-const Donor = mongoose.model<DonorDoc>('donor',DonorSchema)
-export {Donor}
+const DonorFB = mongoose.model<DonorDoc>('donorfb',DonorSchema)
+export {DonorFB}
 

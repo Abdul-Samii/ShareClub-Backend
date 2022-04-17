@@ -8,6 +8,8 @@ export interface DonorDto{
     country:string;
     state:string;
     address:string;
+    signupType:number;
+    fbID:string;
     ads:any;
     activeAds:any
     role:string;

@@ -1,5 +1,5 @@
 import express,{Request,Response,NextFunction} from 'express';
-import { AddCategory, ApproveDonor, ApproveNeedy, RejectDonor, RejectNeedy, ViewDonorRequests, ViewNeedyRequests } from '../controllers';
+import { AddCategory, ApproveDonor, ApproveNeedy, GetCategory, RejectDonor, RejectNeedy, ViewDonorRequests, ViewNeedyRequests, YO } from '../controllers';
 
 const router = express.Router();
 
@@ -10,5 +10,7 @@ router.post('/rejectdonor',RejectDonor);
 router.get('/needyrequests',ViewNeedyRequests);
 router.get('/donorrequests',ViewDonorRequests);
 router.post('/category',AddCategory);
+router.get('/category',GetCategory);
+router.get('/yo',YO)
 
 export {router as AdminRoute};
