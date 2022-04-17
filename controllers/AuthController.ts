@@ -132,27 +132,65 @@ export const RegisterAdmin  =async(req:Request,res:Response,next:NextFunction)=>
 //Login 
 export const Login = async(req:Request,res:Response,next:NextFunction) =>{
     console.log("yes here")
-    const {email,password,type} = <LoginInput>req.body;
+    const {email,password,type,loginType,fbID} = <LoginInput>req.body;
     var existingUser;
-    if(type == "needy")
+    if(loginType == 1)
     {
-         existingUser = await Needy.find({email:email});
+        if(type == "needy")
+        {
+            existingUser = await Needy.find({email:email});
+        }
+        else if(type == "donor")
+        {
+            existingUser = await Donor.find({email:email});
+        }
+        else if(type == "admin")
+        {
+            existingUser = await Admin.find({email:email});
+        }
+    
+    
+        const temp = JSON.stringify(existingUser)
+        const loginUser = JSON.parse(temp)
+        console.log(loginUser[0])
+        if(loginUser[0] !=null)
+        {
+            const validation = await ValidatePassword(password,loginUser[0].password,loginUser[0].salt);
+            if(validation)
+            {
+                const token = GenerateSignature({
+                    _id:loginUser[0]._id,
+                    email:loginUser[0].email,
+                    name:loginUser[0].name,
+                    role:loginUser[0].role
+                })
+                return res.status(200).json({token :token,msg:"You are Logged in",userId:loginUser[0]._id,type:type,signupType:loginUser[0].signupType});
+            }
+            else{
+                return res.status(200).json({msg:"Invalid Password"})
+            }
+        }
+        else{
+            return res.status(200).json({msg:"User not found"});
+        }
     }
-    else if(type == "donor")
+
+    else if(loginType == 2)
     {
-         existingUser = await Donor.find({email:email});
-    }
-    else if(type == "admin")
-    {
-         existingUser = await Admin.find({email:email});
-    }
-    const temp = JSON.stringify(existingUser)
-    const loginUser = JSON.parse(temp)
-    console.log(loginUser[0])
-    if(loginUser[0] !=null)
-    {
-        const validation = await ValidatePassword(password,loginUser[0].password,loginUser[0].salt);
-        if(validation)
+        var existingUser;
+        if(type == "needy")
+        {
+            existingUser = await Needy.find({email:email});
+        }
+        else if(type == "donor")
+        {
+            console.log("Target final ",fbID)
+            existingUser = await DonorFB.find({email:email,fbID:fbID});
+        }
+        const temp = JSON.stringify(existingUser)
+        const loginUser = JSON.parse(temp)
+        console.log(loginUser[0])
+        if(loginUser[0]!=null)
         {
             const token = GenerateSignature({
                 _id:loginUser[0]._id,
@@ -160,13 +198,10 @@ export const Login = async(req:Request,res:Response,next:NextFunction) =>{
                 name:loginUser[0].name,
                 role:loginUser[0].role
             })
-            return res.status(200).json({token :token,msg:"You are Logged in",userId:loginUser[0]._id,type:type});
+            return res.status(200).json({token :token,msg:"You are Logged in",userId:loginUser[0]._id,type:type,signupType:loginUser[0].signupType});
         }
         else{
-            return res.status(200).json({msg:"Invalid Password"})
+            return res.status(200).json({msg:"User not Found"})
         }
-    }
-    else{
-        return res.status(200).json({msg:"User not found"});
     }
 }

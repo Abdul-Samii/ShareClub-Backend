@@ -9,4 +9,6 @@ export interface LoginInput{
     email:string;
     password:string;
     type:string;
+    loginType:number;
+    fbID:string;
 }

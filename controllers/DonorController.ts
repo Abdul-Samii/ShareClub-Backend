@@ -1,6 +1,6 @@
 import { Request,Response,NextFunction } from "express";
 import { adDto } from "../dto";
-import { DonationAd, Donor } from "../models";
+import { DonationAd, Donor, DonorFB } from "../models";
 
 
 //Add Donation Ad
@@ -34,9 +34,19 @@ export const AddDonationAd = async (req:Request,res:Response,next:NextFunction) 
 //Get Donor details
 export const GetDonor = async(req:Request,res:Response,next:NextFunction)=>{
     const donorId = req.body.donorId;
+    const signupType = req.body.signupType;
+
     console.log(donorId)
+    var donor;
     try{
-        const donor = await Donor.findById({_id:donorId});
+        if(signupType == 1)
+        {
+              donor = await Donor.findById({_id:donorId});
+        }
+        else if(signupType == 2){
+             donor = await DonorFB.findById({_id:donorId});
+        }
+        console.log(donor)
         return res.status(200).json(donor);
     }
     catch(err)
