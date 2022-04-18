@@ -10,8 +10,9 @@ export interface DonorDto{
     address:string;
     signupType:number;
     fbID:string;
-    ads:any;
-    activeAds:any
+    activeAds:any;
+    bookedAds:any;
+    completedAds:any;
     role:string;
     privateMode:boolean;
     allowMessages:boolean;

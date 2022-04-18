@@ -13,8 +13,9 @@ interface DonorDoc extends Document{
     country:string;
     address:string;
     state:string;
-    ads:any;
     activeAds:any;
+    bookedAds:any;
+    completedAds:any;
     role:string;
     privateMode:boolean;
     allowMessages:boolean;
@@ -67,13 +68,17 @@ const DonorRequestSchema =  new Schema({
         type:String,
         default:"-"
     },
-    ads:[{
-        type:mongoose.SchemaTypes.ObjectId,
-        ref:'ad'
-    }],
     activeAds:[{
         type:mongoose.SchemaTypes.ObjectId,
-        ref:'ad'
+        ref:'donationad'
+    }],
+    bookedAds:[{
+        type:mongoose.SchemaTypes.ObjectId,
+        ref:'donationad'
+    }],
+    completedAds:[{
+        type:mongoose.SchemaTypes.ObjectId,
+        ref:'donationad'
     }],
     role:{
         type:String,

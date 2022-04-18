@@ -1,6 +1,6 @@
 import { Request,Response,NextFunction, response } from "express";
 import { categoryDto, DonorDto, NeedyDto } from "../dto";
-import { Category, Donor, DonorFB, DonorRequest, Needy, NeedyRequest } from "../models";
+import { Category, Donor, DonorFB, DonorRequest, Needy, NeedyFB, NeedyRequest } from "../models";
 
 
 
@@ -43,7 +43,9 @@ export const ApproveNeedy = async(req:Request,res:Response,next:NextFunction)=>{
         const temp = JSON.stringify(needyData)
         const data = JSON.parse(temp)
         const {name,email,password,pic,phone,salt,city,country,address,acceptedAds,
-            currentAds,role,isApprove} = data;
+            currentAds,role,isApprove,fbID,signupType} = data;
+            if(signupType == 1)
+            { 
         const newNeedy = await Needy.create({
             name:name,
             email:email,
@@ -59,6 +61,25 @@ export const ApproveNeedy = async(req:Request,res:Response,next:NextFunction)=>{
             role:role,
             isApprove:isApprove
         });
+        }
+        else if(signupType == 2)
+        {
+            const newNeedy = await NeedyFB.create({
+                name:name,
+                email:email,
+                fbID:fbID,
+                signupType:signupType,
+                pic:pic,
+                phone:phone,
+                city:city,
+                country:country,
+                address:address,
+                acceptedAds:acceptedAds,
+                currentAds:currentAds,
+                role:role,
+                isApprove:isApprove
+            });
+        }
         await NeedyRequest.findByIdAndDelete({_id:needyId})
 
     }
@@ -85,8 +106,8 @@ export const ApproveDonor = async(req:Request,res:Response,next:NextFunction)=>{
         const donorData =await DonorRequest.findById({_id:donorId})
         const temp = JSON.stringify(donorData)
         const data = JSON.parse(temp)
-        const {name,email,password,pic,salt,phone,city,country,address,ads,
-            activeAds,role,isApprove,fbID,signupType} = data;
+        const {name,email,password,pic,salt,phone,city,country,address,bookedAds,
+            activeAds,completedAds,role,isApprove,fbID,signupType} = data;
         if(signupType == 1)
             {   
              const  newDonor = await Donor.create({
@@ -100,7 +121,8 @@ export const ApproveDonor = async(req:Request,res:Response,next:NextFunction)=>{
                 city:city,
                 country:country,
                 address:address,
-                ads:ads,
+                bookedAds:bookedAds,
+                completedAds:completedAds,
                 activeAds:activeAds,
                 role:role,
                 isApprove:isApprove
@@ -118,7 +140,8 @@ export const ApproveDonor = async(req:Request,res:Response,next:NextFunction)=>{
                 city:city,
                 country:country,
                 address:address,
-                ads:ads,
+                bookedAds:bookedAds,
+                completedAds:completedAds,
                 activeAds:activeAds,
                 role:role,
                 isApprove:isApprove

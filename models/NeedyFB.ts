@@ -3,24 +3,25 @@ import mongoose,{Schema,Document,Model} from "mongoose";
 interface NeedyDoc extends Document{
     name:string;
     email:string;
-    passowrd:string;
-    salt:string;
-    fbID:string;
-    signupType:number;
     pic:string;
     phone:string;
     city:string;
     country:string;
     address:string;
+    fbID:string;
+    signupType:number;
     state:string;
     acceptedAds:any;
     currentAds:any;
+    rejectedAds:any;
     role:string;
+    privateMode:boolean;
+    allowMessages:boolean;
     isApprove:boolean;
 }
 
 
-const NeedyRequestSchema =  new Schema({
+const NeedySchema =  new Schema({
     name:{
         type:String,
         required:true
@@ -29,18 +30,13 @@ const NeedyRequestSchema =  new Schema({
         type:String,
         required:true
     },
-    password:{
-        type:String,
-    },
-    salt:{
-        type:String,
-    },
     fbID:{
         type:String,
+        required:true
     },
     signupType:{
         type:Number,
-        require:true
+        default:2,
     },
     pic:{
         type:String,
@@ -58,25 +54,37 @@ const NeedyRequestSchema =  new Schema({
         type:String,
         default:"-"
     },
-    state:{
+    address:{
         type:String,
         default:"-"
     },
-    address:{
+    state:{
         type:String,
         default:"-"
     },
     acceptedAds:[{
         type:mongoose.SchemaTypes.ObjectId,
-        ref:'ad'
+        ref:'donationad'
     }],
     currentAds:[{
         type:mongoose.SchemaTypes.ObjectId,
-        ref:'ad'
+        ref:'donationad'
+    }],
+    rejectedAds:[{
+        type:mongoose.SchemaTypes.ObjectId,
+        ref:'donationad'
     }],
     role:{
         type:String,
         default:"needy"
+    },
+    privateMode:{
+        type:Boolean,
+        default:true
+    },
+    allowMessages:{
+        type:Boolean,
+        default:true
     },
     isApprove:{
         type:Boolean,
@@ -88,6 +96,6 @@ const NeedyRequestSchema =  new Schema({
     }
 );
 
-const NeedyRequest = mongoose.model<NeedyDoc>('needyRequest',NeedyRequestSchema)
-export {NeedyRequest}
+const NeedyFB = mongoose.model<NeedyDoc>('needyfb',NeedySchema)
+export {NeedyFB}
 

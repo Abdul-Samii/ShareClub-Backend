@@ -8,6 +8,8 @@ export interface NeedyDto{
     country:string;
     state:string;
     address:string;
+    signupType:number;
+    fbID:string;
     acceptedAds:any;
     currentAds:any;
     rejectedAds:any;

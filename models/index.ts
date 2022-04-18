@@ -6,3 +6,4 @@ export * from './DonorRequest';
 export * from './DonationAd';
 export * from './Category';
 export * from './DonorFB';
+export * from './NeedyFB';

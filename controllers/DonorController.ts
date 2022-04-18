@@ -21,6 +21,12 @@ export const AddDonationAd = async (req:Request,res:Response,next:NextFunction) 
         category:category,
         isAvailible:isAvailible
     })
+    console.log(NewDonationAd._id)
+    await Donor.findByIdAndUpdate({_id:owner},{
+        $push:{
+            activeAds:NewDonationAd._id
+        }
+    });
     return res.status(200).json({"msg":"Successfully Added New Donation!"})
 
     }
@@ -52,5 +58,32 @@ export const GetDonor = async(req:Request,res:Response,next:NextFunction)=>{
     catch(err)
     {
         return res.status(400).json("Something went wrong!")
+    }
+}
+
+
+//View Booked donations
+export const ViewDonorBookedDonations=async(req:Request,res:Response,next:NextFunction)=>{
+    const userId = req.query.userId;
+    console.log("Checkeding -> ",userId);
+    try{
+    const donoryo = await Donor.findById({_id:userId}).populate({
+        path:'bookedAds',
+        populate:{
+            path:'category'
+        }
+    })
+    const temp = JSON.stringify(donoryo);
+    const bookedAds = JSON.parse(temp);
+    if( bookedAds==null)
+    {
+        return res.status(200).json({"msg":"No donation Ad found"})
+    }
+        
+    return res.status(200).json({donations:bookedAds,msg:"showing booked ads"})
+    }
+    catch(err)
+    {
+        return res.status(403).json({"msg":"Something went wrong!"});
     }
 }

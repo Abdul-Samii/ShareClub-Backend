@@ -1,31 +1,41 @@
 import { Request,Response,NextFunction } from "express";
 import { AdminDto, AuthPayload, DonorDto, LoginInput, NeedyDto } from "../dto";
-import { Admin, Donor, DonorFB, DonorRequest, Needy, NeedyRequest } from "../models";
+import { Admin, Donor, DonorFB, DonorRequest, Needy, NeedyFB, NeedyRequest } from "../models";
 import { GeneratePassword,GenerateSalt, GenerateSignature, ValidatePassword } from "../utility";
 
 
 //Needy Registration
 export const RegisterNeedy  =async(req:Request,res:Response,next:NextFunction)=>{
     const {name,email,password,pic,phone,city,country,address,acceptedAds,
-        currentAds,role,isApprove} = <NeedyDto>req.body;
+        currentAds,role,isApprove,signupType,fbID} = <NeedyDto>req.body;
 
     const alreadyRegister = await Needy.find({email:email});
     const alreadyRequested = await NeedyRequest.find({email:email});
-    if(alreadyRegister[0]!=null || alreadyRequested[0]!=null)
+    const alreadyFB = await NeedyFB.find({email:email});
+    if(alreadyRegister[0]!=null || alreadyRequested[0]!=null || alreadyFB[0]!=null)
     {
-        return res.status(200).json("Error! A User already exist with this email")
+        console.log(alreadyRegister[0]);
+        return res.status(200).json({"msg":"Error! A User already exist with this email"})
     }
     else{
         //generate salt
         const salt = await GenerateSalt();
-        //encrpt password using salt
-        const hashPassword = await GeneratePassword(password,salt);
+
+        var hashPassword;
+        if(signupType == 1)
+        {
+            //encrpt password using salt
+            hashPassword = await GeneratePassword(password,salt);
+        }
+        
 
         const createNeedy = await NeedyRequest.create({
             name:name,
             email:email,
             password:hashPassword,
             salt:salt,
+            fbID:fbID,
+            signupType:signupType,
             pic:pic,
             phone:phone,
             city:city,
@@ -37,7 +47,7 @@ export const RegisterNeedy  =async(req:Request,res:Response,next:NextFunction)=>
             isApprove:isApprove
         });
         
-        return res.status(200).json("Your Registration request is sent for approval");
+        return res.status(200).json({"msg":"Your Registration request is sent for approval"});
     }
 
 }
@@ -47,8 +57,8 @@ export const RegisterNeedy  =async(req:Request,res:Response,next:NextFunction)=>
 //Donor Registration
 export const RegisterDonor  =async(req:Request,res:Response,next:NextFunction)=>{
     console.log("LOC")
-    const {name,email,password,pic,phone,city,country,address,ads,
-        activeAds,role,isApprove,signupType,fbID} = <DonorDto>req.body;
+    const {name,email,password,pic,phone,city,country,address,bookedAds,
+        activeAds,completedAds,role,isApprove,signupType,fbID} = <DonorDto>req.body;
 
     const alreadyRegister = await Donor.find({email:email});
     const alreadyRequested = await DonorRequest.find({email:email});
@@ -79,7 +89,8 @@ export const RegisterDonor  =async(req:Request,res:Response,next:NextFunction)=>
                 city:city,
                 country:country,
                 address:address,
-                ads:ads,
+                bookedAds:bookedAds,
+                completedAds:completedAds,
                 activeAds:activeAds,
                 role:role,
                 isApprove:isApprove
@@ -180,11 +191,10 @@ export const Login = async(req:Request,res:Response,next:NextFunction) =>{
         var existingUser;
         if(type == "needy")
         {
-            existingUser = await Needy.find({email:email});
+            existingUser = await NeedyFB.find({email:email,fbID:fbID});
         }
         else if(type == "donor")
         {
-            console.log("Target final ",fbID)
             existingUser = await DonorFB.find({email:email,fbID:fbID});
         }
         const temp = JSON.stringify(existingUser)

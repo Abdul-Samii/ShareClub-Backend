@@ -1,13 +1,21 @@
 import {Request,Response,NextFunction} from 'express';
-import { DonationAd, Donor, Needy } from '../models';
+import { DonationAd, Donor, Needy, NeedyFB } from '../models';
 
 
 //Get Needy details
 export const GetNeedy = async(req:Request,res:Response,next:NextFunction)=>{
     const needyId = req.body.needyId;
+    const signupType = req.body.signupType;
     console.log(needyId)
     try{
-        const needy = await Needy.findById({_id:needyId});
+        var needy;
+        if(signupType == 1)
+        {
+             needy = await Needy.findById({_id:needyId});
+        }
+        else if(signupType == 2){
+             needy = await NeedyFB.findById({_id:needyId});
+        }
         return res.status(200).json(needy);
     }
     catch(err)
@@ -30,6 +38,7 @@ export const BookDonationAd = async(req:Request,res:Response,next:NextFunction)=
 
             const temp = JSON.stringify(availible);
             const temp2 = JSON.parse(temp)
+            const owner = temp2.owner
             const isAvailible = temp2.isAvailible;
             if(isAvailible)
             {
@@ -45,6 +54,14 @@ export const BookDonationAd = async(req:Request,res:Response,next:NextFunction)=
                     },
                     $pull:{
                         rejectedAds:donationAdId
+                    }
+                });
+                await Donor.findByIdAndUpdate({_id:owner},{
+                    $push:{
+                        bookedAds:donationAdId
+                    },
+                    $pull:{
+                        activeAds:donationAdId
                     }
                 });
             }
