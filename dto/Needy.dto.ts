@@ -10,8 +10,8 @@ export interface NeedyDto{
     address:string;
     signupType:number;
     fbID:string;
-    acceptedAds:any;
-    currentAds:any;
+    completedAds:any;
+    bookedAds:any;
     rejectedAds:any;
     role:string;
     privateMode:boolean;

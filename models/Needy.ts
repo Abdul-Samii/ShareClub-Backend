@@ -11,8 +11,8 @@ interface NeedyDoc extends Document{
     country:string;
     address:string;
     state:string;
-    acceptedAds:any;
-    currentAds:any;
+    bookedAds:any;
+    completedAds:any;
     rejectedAds:any;
     role:string;
     privateMode:boolean;
@@ -62,11 +62,11 @@ const NeedySchema =  new Schema({
         type:String,
         default:"-"
     },
-    acceptedAds:[{
+    completedAds:[{
         type:mongoose.SchemaTypes.ObjectId,
         ref:'donationad'
     }],
-    currentAds:[{
+    bookedAds:[{
         type:mongoose.SchemaTypes.ObjectId,
         ref:'donationad'
     }],

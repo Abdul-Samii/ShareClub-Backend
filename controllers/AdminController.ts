@@ -42,8 +42,8 @@ export const ApproveNeedy = async(req:Request,res:Response,next:NextFunction)=>{
         const needyData =await NeedyRequest.findById({_id:needyId})
         const temp = JSON.stringify(needyData)
         const data = JSON.parse(temp)
-        const {name,email,password,pic,phone,salt,city,country,address,acceptedAds,
-            currentAds,role,isApprove,fbID,signupType} = data;
+        const {name,email,password,pic,phone,salt,city,country,address,completedAds,
+            bookedAds,role,isApprove,fbID,signupType} = data;
             if(signupType == 1)
             { 
         const newNeedy = await Needy.create({
@@ -56,8 +56,8 @@ export const ApproveNeedy = async(req:Request,res:Response,next:NextFunction)=>{
             city:city,
             country:country,
             address:address,
-            acceptedAds:acceptedAds,
-            currentAds:currentAds,
+            completedAds:completedAds,
+            bookedAds:bookedAds,
             role:role,
             isApprove:isApprove
         });
@@ -74,8 +74,8 @@ export const ApproveNeedy = async(req:Request,res:Response,next:NextFunction)=>{
                 city:city,
                 country:country,
                 address:address,
-                acceptedAds:acceptedAds,
-                currentAds:currentAds,
+                completedAds:completedAds,
+                bookedAds:bookedAds,
                 role:role,
                 isApprove:isApprove
             });

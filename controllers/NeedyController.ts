@@ -50,7 +50,7 @@ export const BookDonationAd = async(req:Request,res:Response,next:NextFunction)=
                 });
                 await Needy.findByIdAndUpdate({_id:needyId},{
                     $push:{
-                        currentAds:donationAdId
+                        bookedAds:donationAdId
                     },
                     $pull:{
                         rejectedAds:donationAdId
@@ -107,7 +107,7 @@ export const CancelDonationAd = async(req:Request,res:Response,next:NextFunction
                 });
                 await Needy.findByIdAndUpdate({_id:needyId},{
                     $pull:{
-                        currentAds:donationAdId
+                        bookedAds:donationAdId
                     },
                     $push:{
                         rejectedAds:donationAdId
@@ -127,6 +127,49 @@ export const CancelDonationAd = async(req:Request,res:Response,next:NextFunction
         return res.status(200).json({"msg":"Something went wrong"});
     }
     return res.status(200).json({"msg":"Donation Cancelled!"});
+}
+
+//Complete Donation
+export const CompleteDonationAd = async(req:Request,res:Response,next:NextFunction)=>{
+    const donationAdId = req.body.donationAdId;
+    console.log("uuu",donationAdId)
+    const needyId = req.body.userId;
+    const availible = await DonationAd.findById({_id:donationAdId})
+    try{
+        if(availible)
+        {
+
+            const temp = JSON.stringify(availible);
+            const temp2 = JSON.parse(temp)
+            const owner = temp2.owner
+            
+                
+                await Needy.findByIdAndUpdate({_id:needyId},{
+                    // $push:{
+                    //     bookedAds:donationAdId
+                    // },
+                    $pull:{
+                        bookedAds:donationAdId
+                    }
+                });
+                await Donor.findByIdAndUpdate({_id:owner},{
+                    $push:{
+                        completedAds:donationAdId
+                    },
+                    $pull:{
+                        bookedAds:donationAdId
+                    }
+                });
+        }
+        else{
+            return res.status(200).json({"msg":"No Donation Ad Found"});
+        }
+}
+    catch(err)
+    {
+        return res.status(200).json({"msg":"Something went wrong"});
+    }
+    return res.status(200).json({"msg":"Donation Completed!"});
 }
 
 
@@ -164,7 +207,7 @@ export const ViewBookedDonations=async(req:Request,res:Response,next:NextFunctio
     console.log("Checkeding -> ",userId);
     try{
     const needyo = await Needy.findById({_id:userId}).populate({
-        path:'currentAds',
+        path:'bookedAds',
         populate:{
             path:'category'
         }

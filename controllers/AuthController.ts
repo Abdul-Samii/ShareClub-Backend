@@ -6,8 +6,8 @@ import { GeneratePassword,GenerateSalt, GenerateSignature, ValidatePassword } fr
 
 //Needy Registration
 export const RegisterNeedy  =async(req:Request,res:Response,next:NextFunction)=>{
-    const {name,email,password,pic,phone,city,country,address,acceptedAds,
-        currentAds,role,isApprove,signupType,fbID} = <NeedyDto>req.body;
+    const {name,email,password,pic,phone,city,country,address,completedAds,
+        bookedAds,role,isApprove,signupType,fbID} = <NeedyDto>req.body;
 
     const alreadyRegister = await Needy.find({email:email});
     const alreadyRequested = await NeedyRequest.find({email:email});
@@ -41,8 +41,8 @@ export const RegisterNeedy  =async(req:Request,res:Response,next:NextFunction)=>
             city:city,
             country:country,
             address:address,
-            acceptedAds:acceptedAds,
-            currentAds:currentAds,
+            completedAds:completedAds,
+            bookedAds:bookedAds,
             role:role,
             isApprove:isApprove
         });

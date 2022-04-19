@@ -72,6 +72,11 @@ export const ViewDonorBookedDonations=async(req:Request,res:Response,next:NextFu
         populate:{
             path:'category'
         }
+    }).populate({
+        path:'completedAds',
+        populate:{
+            path:'category'
+        }
     })
     const temp = JSON.stringify(donoryo);
     const bookedAds = JSON.parse(temp);
@@ -79,7 +84,7 @@ export const ViewDonorBookedDonations=async(req:Request,res:Response,next:NextFu
     {
         return res.status(200).json({"msg":"No donation Ad found"})
     }
-        
+        console.log(bookedAds)
     return res.status(200).json({donations:bookedAds,msg:"showing booked ads"})
     }
     catch(err)
