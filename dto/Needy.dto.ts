@@ -17,4 +17,5 @@ export interface NeedyDto{
     privateMode:boolean;
     allowMessages:boolean;
     isApprove:boolean;
+    block:boolean;
 }

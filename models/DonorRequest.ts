@@ -20,6 +20,7 @@ interface DonorDoc extends Document{
     privateMode:boolean;
     allowMessages:boolean;
     isApprove:boolean;
+    block:boolean;
 }
 
 
@@ -87,6 +88,10 @@ const DonorRequestSchema =  new Schema({
     privateMode:{
         type:Boolean,
         default:true
+    },
+    block:{
+        type:Boolean,
+        default:false
     },
     allowMessages:{
         type:Boolean,

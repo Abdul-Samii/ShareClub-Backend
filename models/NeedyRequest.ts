@@ -17,6 +17,7 @@ interface NeedyDoc extends Document{
     completedAds:any;
     role:string;
     isApprove:boolean;
+    block:boolean;
 }
 
 
@@ -65,6 +66,10 @@ const NeedyRequestSchema =  new Schema({
     address:{
         type:String,
         default:"-"
+    },
+    block:{
+        type:Boolean,
+        default:false
     },
     completedAds:[{
         type:mongoose.SchemaTypes.ObjectId,

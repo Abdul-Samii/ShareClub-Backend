@@ -95,6 +95,7 @@ export const CancelDonationAd = async(req:Request,res:Response,next:NextFunction
             const temp = JSON.stringify(availible);
             const temp2 = JSON.parse(temp)
             const isAvailible = temp2.isAvailible;
+            const owner = temp2.owner;
             if(!isAvailible)
             {
                 await DonationAd.findByIdAndUpdate({_id:donationAdId},{
@@ -111,6 +112,14 @@ export const CancelDonationAd = async(req:Request,res:Response,next:NextFunction
                     },
                     $push:{
                         rejectedAds:donationAdId
+                    }
+                });
+                await Donor.findByIdAndUpdate({_id:owner},{
+                    $push:{
+                        activeAds:donationAdId
+                    },
+                    $pull:{
+                        bookedAds:donationAdId
                     }
                 });
             }
@@ -145,9 +154,9 @@ export const CompleteDonationAd = async(req:Request,res:Response,next:NextFuncti
             
                 
                 await Needy.findByIdAndUpdate({_id:needyId},{
-                    // $push:{
-                    //     bookedAds:donationAdId
-                    // },
+                    $push:{
+                        completedAds:donationAdId
+                    },
                     $pull:{
                         bookedAds:donationAdId
                     }
@@ -208,6 +217,11 @@ export const ViewBookedDonations=async(req:Request,res:Response,next:NextFunctio
     try{
     const needyo = await Needy.findById({_id:userId}).populate({
         path:'bookedAds',
+        populate:{
+            path:'category'
+        }
+    }).populate({
+        path:'completedAds',
         populate:{
             path:'category'
         }

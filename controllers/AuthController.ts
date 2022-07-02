@@ -8,7 +8,7 @@ import { GeneratePassword,GenerateSalt, GenerateSignature, ValidatePassword } fr
 export const RegisterNeedy  =async(req:Request,res:Response,next:NextFunction)=>{
     const {name,email,password,pic,phone,city,country,address,completedAds,
         bookedAds,role,isApprove,signupType,fbID} = <NeedyDto>req.body;
-
+ 
     const alreadyRegister = await Needy.find({email:email});
     const alreadyRequested = await NeedyRequest.find({email:email});
     const alreadyFB = await NeedyFB.find({email:email});
@@ -144,6 +144,7 @@ export const RegisterAdmin  =async(req:Request,res:Response,next:NextFunction)=>
 export const Login = async(req:Request,res:Response,next:NextFunction) =>{
     console.log("yes here")
     const {email,password,type,loginType,fbID} = <LoginInput>req.body;
+    console.log("Body ",req.body)
     var existingUser;
     if(loginType == 1)
     {
@@ -166,19 +167,25 @@ export const Login = async(req:Request,res:Response,next:NextFunction) =>{
         console.log(loginUser[0])
         if(loginUser[0] !=null)
         {
-            const validation = await ValidatePassword(password,loginUser[0].password,loginUser[0].salt);
-            if(validation)
+            if(!loginUser[0].block)
             {
-                const token = GenerateSignature({
-                    _id:loginUser[0]._id,
-                    email:loginUser[0].email,
-                    name:loginUser[0].name,
-                    role:loginUser[0].role
-                })
-                return res.status(200).json({token :token,msg:"You are Logged in",userId:loginUser[0]._id,type:type,signupType:loginUser[0].signupType});
+                const validation = await ValidatePassword(password,loginUser[0].password,loginUser[0].salt);
+                if(validation)
+                {
+                    const token = GenerateSignature({
+                        _id:loginUser[0]._id,
+                        email:loginUser[0].email,
+                        name:loginUser[0].name,
+                        role:loginUser[0].role
+                    })
+                    return res.status(200).json({token :token,msg:"You are Logged in",userId:loginUser[0]._id,type:type,signupType:loginUser[0].signupType});
+                }
+                else{
+                    return res.status(200).json({msg:"Invalid Password"})
+                }
             }
             else{
-                return res.status(200).json({msg:"Invalid Password"})
+                return res.status(200).json({msg:"User Accout is Blocked"})
             }
         }
         else{

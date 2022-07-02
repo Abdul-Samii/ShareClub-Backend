@@ -17,4 +17,5 @@ export interface DonorDto{
     privateMode:boolean;
     allowMessages:boolean;
     isApprove:boolean;
+    block:boolean;
 }

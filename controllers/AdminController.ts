@@ -203,6 +203,21 @@ export const AddCategory = async(req:Request,res:Response,next:NextFunction)=>{
     }
 }
 
+//Delete Category
+export const DeleteCategory = async(req:Request,res:Response,next:NextFunction)=>{
+    const id = req.params.id;
+    console.log("Delete",id)
+    try{
+        await Category.findByIdAndDelete({_id:id})
+
+        res.status(200).json({"msg":"Deleted Successfully!"})
+    }
+    catch(err)
+    {
+        res.status(403).json({"msg":"Something went wrong!"})
+    }
+}
+
 //Get All Categories
 export const GetCategory = async(req:Request,res:Response,next:NextFunction)=>{
     console.log("Cat")
@@ -218,9 +233,152 @@ export const GetCategory = async(req:Request,res:Response,next:NextFunction)=>{
 }
 
 
-//Reject Donor
+//testing
 export const YO = async(req:Request,res:Response,next:NextFunction)=>{
     
     return res.status(200).json("Working");
 
 } 
+
+
+
+
+//BLOCK/UNBLOCK
+export const BlockUnBlock = async(req:Request,res:Response,next:NextFunction) =>{
+    const type = req.body.type;
+    const mode = req.body.mode;
+    const userId = req.body.userId;
+    var user;
+console.log("Checking   ",type, mode, userId)
+    try{
+    if(type === 'needy')
+    {
+         user = await Needy.findById({_id:userId});
+    }
+    else if(type === 'donor')
+    {
+         user = await Donor.findById({_id:userId});
+    }
+    
+
+    const temp = JSON.stringify(user)
+    const userDetail = JSON.parse(temp)
+    if(userDetail!=null)
+    {
+                    
+            if(type === 'needy')
+            {
+                 await Needy.findOneAndUpdate({_id:userId},{
+                     $set:{
+                         block:mode
+                     }
+                 })
+            }
+            else if(type === 'donor')
+            {
+                await Donor.findOneAndUpdate({_id:userId},{
+                    $set:{
+                        block:mode
+                    }
+                })
+            }
+           
+
+            return res.status(200).json({msg:"Mode Updated!"});
+        
+    }
+}
+catch(err)
+{
+    return res.status(403).json({"msg":"Something went wrong!"})
+}
+
+}
+
+
+
+
+
+
+
+//Block Needy
+export const BlockNeedy = async(req:Request,res:Response,next:NextFunction)=>{
+    const userId = req.body.userId;
+    try{
+        await Needy.findByIdAndUpdate({_id:userId},{
+            $set:{
+                block:true
+            }
+        });
+        
+
+    }
+    catch(err)
+    {
+        return res.status(400).json("Something went wrong!");
+    }
+    return res.status(200).json("Needy Blocked!")
+}
+
+
+
+
+//Block Donor
+export const BlockDonor = async(req:Request,res:Response,next:NextFunction)=>{
+    const userId = req.body.userId;
+    try{
+        await Donor.findByIdAndUpdate({_id:userId},{
+            $set:{
+                block:true
+            }
+        });
+        
+
+    }
+    catch(err)
+    {
+        return res.status(400).json("Something went wrong!");
+    }
+    return res.status(200).json("Donor Blocked!")
+}
+
+//UnBlock Needy
+export const UnBlockNeedy = async(req:Request,res:Response,next:NextFunction)=>{
+    const userId = req.body.userId;
+    try{
+        await Needy.findByIdAndUpdate({_id:userId},{
+            $set:{
+                block:false
+            }
+        });
+        
+
+    }
+    catch(err)
+    {
+        return res.status(400).json("Something went wrong!");
+    }
+    return res.status(200).json("Needy UnBlocked!")
+}
+
+
+
+
+//UnBlock Donor
+export const UnBlockDonor = async(req:Request,res:Response,next:NextFunction)=>{
+    const userId = req.body.userId;
+    try{
+        await Donor.findByIdAndUpdate({_id:userId},{
+            $set:{
+                block:false
+            }
+        });
+        
+
+    }
+    catch(err)
+    {
+        return res.status(400).json("Something went wrong!");
+    }
+    return res.status(200).json("Donor UnBlocked!")
+}
