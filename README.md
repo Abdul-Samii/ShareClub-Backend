@@ -1,7 +1,6 @@
-"# ShareClub-Backend" 
-<br />
+**" ShareClub-Backend"**
 "Welcome to ShareClub Backend. This is a Mobile app build in react native."
-
+**Description**
 Introduction In this system, restaurants, books shops, tailor shops and any individual can register themselves as a donor who will donate donations like food, books, clothes or anything they want to the people who needs them. On the other hand, the users who needs donation will also register themselves on this platform and the system will verify them. The people who can recieve donations can view donations in the same city which is added in there profile. They can book the donation ads, once the donation ad is booked it'll not be visible to other users who are searching the donation ad section. There is QR code on the donor side which'll be scan by the reciever when He/She collects the item from donor.
 
 There is a chat feature in the app also, chat is initiated if the donation ad is booked by the user. This chat feature is implemented using firebase. Moreover user can register and sigin using facebook.
